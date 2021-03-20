@@ -42,4 +42,4 @@ The [original implementation](https://github.com/dtuggener/CharSplit) can be opt
 
 ![](performance.svg)
 
-This is not a super serious benchmark. I just ran each version five times on the GermaNet evaluation data v15.0 and averaged the execution times (without loading the JSON).
+This is not a super serious benchmark. I just ran each version five times on the GermaNet evaluation data v15.0 and averaged the execution times (without loading the JSON). The error bars represent the standard deviation.
