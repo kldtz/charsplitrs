@@ -46,21 +46,21 @@ impl CharSplitter {
     /// assert_eq!(right, "tür");
     /// ```
     pub fn split<'a>(&self, word: &'a str) -> (&'a str, &'a str) {
-        let (_prob, left, right) = self.find_split_indices(word)[0];
+        let (_score, left, right) = self.find_split_indices(word);
         (&word[..left], &word[right..])
     }
 
-    fn find_split_indices(&self, word: &str) -> Vec<(f64, usize, usize)> {
+    fn find_split_indices(&self, word: &str) -> (f64, usize, usize) {
         // word contains hyphen: split on last hyphen
         let idx = word.rfind('-');
         if let Some(i) = idx {
-            return vec![(1f64, i, i + 1)];
+            return (1f64, i, i + 1);
         }
 
         let word = word.to_lowercase();
         let char_string = CharString::new(&word);
 
-        let mut scores: Vec<(f64, usize, usize)> = Vec::new();
+        let mut best = (f64::NEG_INFINITY, char_string.num_bytes(), 0);
 
         for n in 3..char_string.len() - 2 {
             // likelihood of left part being suffix (independent word)
@@ -79,17 +79,12 @@ impl CharSplitter {
             let in_slice_prob = self.compute_in_slice_prob(&char_string, n);
 
             let score = right_slice_prob - in_slice_prob + left_slice_prob;
-            let i = char_string.char2byte(n);
-            scores.push((score, i, i));
+            if score > best.0 {
+                let i = char_string.char2byte(n);
+                best = (score, i, i);
+            }
         }
-        // no split candidates (for short words)
-        if scores.len() == 0 {
-            scores.push((0f64, char_string.num_bytes(), 0));
-            return scores;
-        }
-        // sort scores in reverse order (highest score == best)
-        scores.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
-        scores
+        best
     }
 
     fn compute_in_slice_prob(&self, char_string: &CharString, n: usize) -> f64 {
