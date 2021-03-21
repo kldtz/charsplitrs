@@ -88,13 +88,16 @@ impl CharSplitter {
     }
 
     fn compute_in_slice_prob(&self, char_string: &CharString, n: usize) -> f64 {
-        let mut in_slice_probs: Vec<&f64> = Vec::new();
+        let mut min_in_slice_prob = f64::INFINITY;
         // iterate over all substrings of right slice with min. length 3
         for k in (n + 3)..char_string.len() + 1 {
             let in_slice = char_string.substr(n, k);
-            in_slice_probs.push(self.infix_prob(in_slice).unwrap_or(&1f64));
+            let in_slice_prob = self.infix_prob(in_slice).unwrap_or(&1f64);
+            if *in_slice_prob < min_in_slice_prob {
+                min_in_slice_prob = *in_slice_prob;
+            }
         }
-        in_slice_probs.iter().fold(1f64, |a, &b| a.min(*b))
+        min_in_slice_prob
     }
 }
 
@@ -108,5 +111,5 @@ fn cut_off_fugen_s(word: &str) -> &str {
         // -1 because 's' is a single-byte char
         return &word[..word.len() - 1];
     }
-    return &word;
+    return word;
 }
