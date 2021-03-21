@@ -2,7 +2,7 @@
 
 Improved Rust implementation of Don Tuggener's [CharSplit](https://github.com/dtuggener/CharSplit) for splitting German compounds. So far without the training code. 
 
-I like the elegance and simplicity of the algorithm and found it to work very well in practice when combined with a simple dictionary lookup (e.g., via Hunspell).
+I like the elegance and simplicity of the algorithm and found it to work very well in practice when combined with a simple dictionary lookup (e.g., via Hunspell) and a stopword list.
 
 ## Usage
 
