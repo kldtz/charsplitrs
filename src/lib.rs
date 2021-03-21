@@ -88,16 +88,18 @@ impl CharSplitter {
     }
 
     fn compute_in_slice_prob(&self, char_string: &CharString, n: usize) -> f64 {
-        let mut min_in_slice_prob = 1f64;
+        let mut min_in_slice_prob = f64::INFINITY;
         // iterate over all substrings of right slice with min. length 3
         for k in (n + 3)..char_string.len() + 1 {
             let in_slice = char_string.substr(n, k);
-            let in_slice_prob = self.infix_prob(in_slice).unwrap_or(&1f64);
+            let in_slice_prob = self.infix_prob(in_slice).unwrap_or(&f64::INFINITY);
             if *in_slice_prob < min_in_slice_prob {
                 min_in_slice_prob = *in_slice_prob;
             }
         }
-        min_in_slice_prob
+        // if none of the substrings appeared as an infix, assume 0 probability
+        // (this deviates from the original implementation)
+        if min_in_slice_prob > 1f64 { 0f64 } else { min_in_slice_prob }
     }
 }
 
