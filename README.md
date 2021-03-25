@@ -10,7 +10,7 @@ Add the dependency in your `Cargo.toml`.
 
 ```toml
 [dependencies]
-charsplitrs = { version = "0.2", path = "/path/to/charsplitrs" }
+charsplitrs = { git = "https://github.com/kldtz/charsplitrs.git" }
 ```
 
 Read your ngram probabilities (or the probabilities included in the original package, see `data/ngram_probs.json`), and start splitting.
